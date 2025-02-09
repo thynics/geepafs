@@ -373,7 +373,7 @@ int main(int argc, char* argv[])
     printf("MACHINE %s\n", MACHINE);
     printf("GPU freqset tool start..\n");
     tegrastats_init();
-
+    printf("tegrastats init success\n");
     if (argc < 2)
     {
         printf("Error: Needs argument: %s\n", allArg);
