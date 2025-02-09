@@ -69,7 +69,7 @@ void *bash_thread(void *arg) {
         close(pipefd[0]);
         dup2(pipefd[1], STDOUT_FILENO);
         close(pipefd[1]);
-        execl("/bin/sh", "sh", "-c", "sudo tegrastats", NULL);
+        execl("/bin/bash", "sudo tegrastats", NULL);
         perror("execl");
         return 1;
     } else { // parent
