@@ -14,7 +14,6 @@
 #include "tegrastats.h"
 #include <stdlib.h>
 
-
 unsigned int get_closest_frequency(unsigned int input)
 {
     if (input == 114)
@@ -59,8 +58,9 @@ int tegrastats_init()
 int tegrastats_get(tegrastats_info_t *info)
 {
 
-    FILE *file = fopen("tegrastats_output.txt", "rb");  // 以二进制方式打开文件
-    if (file == NULL) {
+    FILE *file = fopen("tegrastats_output.txt", "rb"); // 以二进制方式打开文件
+    if (file == NULL)
+    {
         perror("open file fail");
         return 1;
     }
@@ -70,7 +70,8 @@ int tegrastats_get(tegrastats_info_t *info)
     rewind(file);
 
     char *buffer = (char *)malloc(file_size + 1);
-    if (buffer == NULL) {
+    if (buffer == NULL)
+    {
         perror("allocate buffer fail");
         fclose(file);
         return 1;
@@ -135,17 +136,20 @@ int tegrastats_get(tegrastats_info_t *info)
             }
             last = NULL;
         }
-        else if (strcmp(token, "EMC_FREQ"))
+        else
         {
-            last = "EMC_FREQ";
-        }
-        else if (strcmp(token, "GR3D_FREQ"))
-        {
-            last = "GR3D_FREQ";
-        }
-        else if (strcmp(token, "VDD_SYS_GPU"))
-        {
-            last = "VDD_SYS_GPU";
+            if (strcmp(token, "EMC_FREQ"))
+            {
+                last = "EMC_FREQ";
+            }
+            else if (strcmp(token, "GR3D_FREQ"))
+            {
+                last = "GR3D_FREQ";
+            }
+            else if (strcmp(token, "VDD_SYS_GPU"))
+            {
+                last = "VDD_SYS_GPU";
+            }
         }
         token = strtok(NULL, delim);
     }
