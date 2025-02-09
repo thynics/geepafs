@@ -11,7 +11,7 @@ import time
 
 # start tegrastats first
 print("start tegrastats")
-tegrastats_thread = subprocess.Popen(["sudo python3 ./tegrastats.py"], stdout=subprocess.STDOUT, stderr=subprocess.STDOUT, shell=True)
+tegrastats_thread = subprocess.Popen(["sudo python3 ~/geepafs/tegrastats.py"], stdout=subprocess.STDOUT, stderr=subprocess.STDOUT, shell=True)
 
 
 # run geepafs
