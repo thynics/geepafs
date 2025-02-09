@@ -8,6 +8,7 @@
 
 import subprocess
 import time
+import os
 
 # start tegrastats first
 print("start tegrastats")

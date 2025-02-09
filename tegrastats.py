@@ -1,5 +1,6 @@
 import subprocess
 import time
+import os
 
 def monitor_tegrastats(output_file):
     command = ["sudo tegrastats"]
@@ -19,5 +20,6 @@ def monitor_tegrastats(output_file):
                 proc.terminate()
 
 output_file_path = "tegrastats_output.txt"
+os.remove("tegrastats_all.txt")
 print("start success")
 monitor_tegrastats(output_file_path)
