@@ -8,7 +8,7 @@ def monitor_tegrastats(output_file):
                 for line in proc.stdout:
                     file.seek(0)
                     file.truncate()
-                    file.write(line.strip() + "\n")
+                    file.write(line.strip())
                     file.flush()
                     
             except KeyboardInterrupt:
