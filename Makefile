@@ -64,7 +64,7 @@ NVML_LIB += /usr/local/cuda/lib64/
 NVML_LIB_L := $(addprefix -L , $(NVML_LIB))
 
 CFLAGS  := -I /usr/local/include -I /usr/local/cuda/include
-LDFLAGS := $(NVML_LIB_L) -lm
+LDFLAGS := -lpthread $(NVML_LIB_L) -lm
 
 SOURCES := dvfs.c tegrastats.c
 OBJECTS := $(SOURCES:.c=.o)
