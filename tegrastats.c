@@ -79,8 +79,7 @@ int tegrastats_get(tegrastats_info_t *info)
     buffer[bytes_read] = '\0';
 
     const char delim[] = " ";
-    char *saveptr;
-    char *token = strtok_r(buffer, delim, &saveptr);
+    char *token = strtok(buffer, delim);
     char *last = NULL;
     while (token != NULL)
     {
@@ -148,6 +147,7 @@ int tegrastats_get(tegrastats_info_t *info)
         {
             last = "VDD_SYS_GPU";
         }
+        token = strtok(NULL, delim);
     }
     return 0;
 }
