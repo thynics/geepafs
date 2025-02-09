@@ -12,6 +12,7 @@
 #include <string.h>
 
 #include "tegrastats.h"
+#include <stdlib.h>
 
 
 unsigned int get_closest_frequency(unsigned int input)
