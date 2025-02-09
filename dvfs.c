@@ -310,16 +310,12 @@ int main(int argc, char* argv[])
     int numProbFreq; // number of freqs to be probed in the probing phase. the freq values are in variable probFreqs.
     int* const probFreqs = (int*)malloc(sizeof(int)*20);// reserve enough space for probing freqs.
 
-    // Run "nvidia-smi -q -d SUPPORTED_CLOCKS" to get available frequencies and update the following parameters if needed.
-    if (strcmp(MACHINE, "a100-insp") == 0)
-    {
-        minSetFreq = 1110; freqAvgEff = 1110; maxFreq = 1410; setMemFreq = 1593; numAvailableFreqs = 81;
-        numProbFreq = 4;
-        probFreqs[0] = 1110; // frequency values for probing.
-        probFreqs[1] = 1215;
-        probFreqs[2] = 1320;
-        probFreqs[3] = 1410;
-    }
+    minSetFreq = 114750000; freqAvgEff = 420750000; maxFreq = 1300500000; setMemFreq = 1866; numAvailableFreqs = 13;
+    numProbFreq = 4;
+    probFreqs[0] = 114750000; // frequency values for probing.
+    probFreqs[1] = 726750000;
+    probFreqs[2] = 1032750000;
+    probFreqs[3] = 1300500000;
 
     const char *allArg = "mod for modulate";
     const char *argAbbre= "mod";
