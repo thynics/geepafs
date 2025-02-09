@@ -45,7 +45,7 @@ unsigned int get_closest_frequency(unsigned int input)
         return 1300500000;
     else
     {
-        printf("Frequency not available.\n");
+        printf("Frequency not available: %d.\n", input);
         return 0; // Return 0 if input does not match any case
     }
 }
