@@ -46,6 +46,7 @@ void *bash_thread(void *arg) {
         perror("popen failed");
         pthread_exit(NULL);
     }
+    int fd = fileno(fp);
 
     key_t key = ftok("tegrastats_content", 65);  // Generate unique key for shared memory
     if (key == -1) {
@@ -68,7 +69,7 @@ void *bash_thread(void *arg) {
     }
 
     tegrastats_info_t t_info;
-    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
+    while (fgets(buffer, sizeof(buffer), fd) != NULL) {
         buffer[strcspn(buffer, "\n")] = 0;
         printf("Processed line: %s\n", buffer);
         const char delim[] = " ";
