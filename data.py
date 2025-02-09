@@ -38,11 +38,13 @@ with open("tegrastats_all.txt", "r") as tf:
     dvfs_lines = [extract(line.split("---")[1]) for line in tf if time_window(dvfs_vgg_start_time, dvfs_vgg_end_time, line)]
     max_perf_lines = [extract(line.split("---")[1]) for line in tf if time_window(vgg_start_time, vgg_end_time, line)]
 
+print(len(dvfs_lines))
+print(len(max_perf_lines))
 
 print(dvfs_vgg_start_time, dvfs_vgg_end_time, vgg_start_time, vgg_end_time)
 
-dvfs_time = (dvfs_vgg_end_time - dvfs_vgg_start_time)/1000
-max_perf_time = (vgg_end_time - vgg_start_time) / 1000
+dvfs_time = (dvfs_vgg_end_time - dvfs_vgg_start_time)
+max_perf_time = (vgg_end_time - vgg_start_time)
 
 
 dvfs_avg_power = sum(x[gpu_power_key] for x in dvfs_lines) / len(dvfs_lines)
