@@ -84,8 +84,8 @@ int tegrastats_get(tegrastats_info_t *info)
     char *last = NULL;
     while (token != NULL)
     {
-        printf("last: %s\n", last);
-        printf("now: %s\n", token);
+        //printf("last: %s\n", last);
+        //printf("now: %s\n", token);
         if (last != NULL)
         {
             if (strcmp(last, "EMC_FREQ") == 0)
@@ -96,7 +96,7 @@ int tegrastats_get(tegrastats_info_t *info)
                 {
                     mem_util = mem_util * 10 + (token[i++] - '0');
                 }
-                printf("mem_util: %d\n", mem_util);
+                //printf("mem_util: %d\n", mem_util);
                 info->mem_util = mem_util;
             }
             if (strcmp(last, "GR3D_FREQ") == 0)
@@ -122,8 +122,8 @@ int tegrastats_get(tegrastats_info_t *info)
                         gpu_freq = gpu_freq * 10 + (token[i] - '0');
                     }
                 }
-                printf("gpu_util: %d\n", gpu_util);
-                printf("freq: %d\n", gpu_freq);
+                //printf("gpu_util: %d\n", gpu_util);
+                //printf("freq: %d\n", gpu_freq);
                 info->gpu_util = gpu_util;
                 info->current_freq = get_closest_frequency(gpu_freq);
             }
@@ -136,7 +136,7 @@ int tegrastats_get(tegrastats_info_t *info)
                     power = power * 10 + token[i++] - '0';
                 }
                 info->current_power = power;
-                printf("power: %d\n", power);
+                //printf("power: %d\n", power);
             }
             last = NULL;
         }
