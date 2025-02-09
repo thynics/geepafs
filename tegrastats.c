@@ -80,7 +80,7 @@ void *bash_thread(void *arg) {
         }
     }
     
-    return
+    return;
     tegrastats_info_t t_info;
     while (fgets(buffer, sizeof(buffer), fd) != NULL) {
         buffer[strcspn(buffer, "\n")] = 0;
