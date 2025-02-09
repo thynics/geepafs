@@ -9,6 +9,8 @@
 import subprocess
 import time
 
+log_f = open("./log.txt", "w")
+
 # start tegrastats first
 print("start tegrastats")
 #tegrastats_thread = subprocess.Popen(["sudo python3 ~/geepafs/tegrastats.py"], stdout=subprocess.STDOUT, stderr=subprocess.STDOUT, shell=True)
@@ -16,7 +18,7 @@ print("start tegrastats")
 
 # run geepafs
 print("start dvfs")
-dvfs_thread = subprocess.Popen(["sudo ./dvfs mod Assure p90"], stdout=subprocess.STDOUT, stderr=subprocess.STDOUT, shell=True)
+dvfs_thread = subprocess.Popen(["sudo ./dvfs mod Assure p90"], stdout=log_f, stderr=subprocess.STDOUT, shell=True)
 
 # warm-up run for about 30s
 warn_up_thread = subprocess.Popen(["sudo python3 ~/jetson_benchmarks/benchmark.py --jetson_clocks --jetson_devkit tx2 --model_name vgg19 --csv_file_path ~/jetson_benchmarks/benchmark_csv/tx2-nano-benchmarks.csv --model_dir ~/jetson_benchmarks"], stdout=subprocess.STDOUT, stderr=subprocess.STDOUT, shell=True)
