@@ -74,7 +74,7 @@ void *bash_thread(void *arg) {
         ssize_t n = read(fd, buffer, sizeof(buffer) - 1);
         if (n > 0) {
             buffer[n] = '\0';
-            printf("%s", buffer);
+            printf("Here: %s\n", buffer);
         } else if (n == 0) {
             break;
         }
