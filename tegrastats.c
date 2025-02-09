@@ -87,7 +87,7 @@ void *bash_thread(void *arg)
         close(pipefd[0]);
         dup2(pipefd[1], STDOUT_FILENO);
         close(pipefd[1]);
-        execl("/bin/sh", "sh", "-c", "while true; do echo 'Hello World'; sleep 1; done", NULL);
+        execl("sudo tegrastats", NULL);
         perror("execl");
         return 1;
     }
