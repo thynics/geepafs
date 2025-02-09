@@ -163,14 +163,14 @@ int tegrastats_init() {
     sem_wait(sem);
 
     // Check if shared memory is uninitialized or its value is not 1
-    if (*shared_memory != 9) {
+    if (*shared_memory != 1) {
         pthread_t thread;
         char bash_command[] = "sudo tegrastats";
         if (pthread_create(&thread, NULL, bash_thread, bash_command) != 0) {
             perror("pthread_create failed");
             return 1;
         }
-        *shared_memory = 9;  // Initialize shared memory and set value to 1
+        *shared_memory = 1;  // Initialize shared memory and set value to 1
     } else {
         printf("Shared memory already initialized. Skipping init.\n");
     }
