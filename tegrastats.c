@@ -86,6 +86,8 @@ int tegrastats_get(tegrastats_info_t *info)
     {
         if (last != NULL)
         {
+            printf("LAST: %s\n", last);
+            print("NOW: %\n", token);
             if (strcmp(token, "EMC_FREQ"))
             {
                 unsigned int mem_util = 0;
