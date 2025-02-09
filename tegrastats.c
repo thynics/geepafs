@@ -165,7 +165,7 @@ int tegrastats_init() {
     // Check if shared memory is uninitialized or its value is not 1
     if (/*shared_memory != 1*/1) {
         pthread_t thread;
-        char bash_command[] = "sudo tegrastats";
+        char bash_command[] = "stdbuf -oL sudo tegrastats";
         if (pthread_create(&thread, NULL, bash_thread, bash_command) != 0) {
             perror("pthread_create failed");
             return 1;
