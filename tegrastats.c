@@ -88,7 +88,7 @@ int tegrastats_get(tegrastats_info_t *info)
         printf("NOW: %s\n", token);
         if (last != NULL)
         {
-            if (strcmp(token, "EMC_FREQ"))
+            if (strcmp(token, "EMC_FREQ") == 0)
             {
                 unsigned int mem_util = 0;
                 int i = 0;
@@ -98,7 +98,7 @@ int tegrastats_get(tegrastats_info_t *info)
                 }
                 info->mem_util = mem_util;
             }
-            if (strcmp(token, "GR3D_FREQ"))
+            if (strcmp(token, "GR3D_FREQ") == 0)
             {
                 unsigned int gpu_util = 0;
                 unsigned int gpu_freq = 0;
@@ -124,7 +124,7 @@ int tegrastats_get(tegrastats_info_t *info)
                 info->gpu_util = gpu_util;
                 info->current_freq = get_closest_frequency(gpu_freq);
             }
-            if (strcmp(token, "VDD_SYS_GPU"))
+            if (strcmp(token, "VDD_SYS_GPU") == 0)
             {
                 unsigned int power = 0;
                 int i = 0;
@@ -138,19 +138,16 @@ int tegrastats_get(tegrastats_info_t *info)
         }
         else
         {
-            if (strcmp(token, "EMC_FREQ"))
+            if (strcmp(token, "EMC_FREQ") == 0)
             {
-                printf("Update EMC\n");
                 last = "EMC_FREQ";
             }
-            if (strcmp(token, "GR3D_FREQ"))
+            if (strcmp(token, "GR3D_FREQ") == 0)
             {
-                printf("Update GR3D\n");
                 last = "GR3D_FREQ";
             }
-            if (strcmp(token, "VDD_SYS_GPU"))
+            if (strcmp(token, "VDD_SYS_GPU") == 0)
             {
-                printf("Update VDD\n");
                 last = "VDD_SYS_GPU";
             }
         }
