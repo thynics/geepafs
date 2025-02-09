@@ -40,6 +40,17 @@ print("start tegrastats")
 tegrastats_thread = subprocess.Popen(["sudo python3 ~/geepafs/tegrastats.py"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 
 
+
+set_gpu_frequency(1300500000)
+time.sleep(60)
+
+# run vgg
+vgg_start_time = time.time()
+with open("vgg_max_perf_result.txt", "w") as f:
+    vgg_perf_thread = subprocess.Popen(["sudo python3 ~/jetson_benchmarks/benchmark.py --jetson_clocks --jetson_devkit tx2 --model_name vgg19 --csv_file_path ~/jetson_benchmarks/benchmark_csv/tx2-nano-benchmarks.csv --model_dir ~/jetson_benchmarks"], stdout=f, stderr=subprocess.STDOUT, shell=True)
+vgg_perf_thread.wait()
+vgg_end_time = time.time()
+
 # run geepafs
 print("start dvfs")
 dvfs_thread = subprocess.Popen(["sudo ./dvfs mod Assure p90"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
@@ -64,16 +75,6 @@ vgg_thread.wait()
 dvfs_vgg_end_time = time.time()
 # kill geepafs
 dvfs_thread.terminate()
-
-set_gpu_frequency(1300500000)
-time.sleep(60)
-
-# run vgg
-vgg_start_time = time.time()
-with open("vgg_max_perf_result.txt", "w") as f:
-    vgg_perf_thread = subprocess.Popen(["sudo python3 ~/jetson_benchmarks/benchmark.py --jetson_clocks --jetson_devkit tx2 --model_name vgg19 --csv_file_path ~/jetson_benchmarks/benchmark_csv/tx2-nano-benchmarks.csv --model_dir ~/jetson_benchmarks"], stdout=f, stderr=subprocess.STDOUT, shell=True)
-vgg_perf_thread.wait()
-vgg_end_time = time.time()
 # vgg -> vgg_max_perf_result.txt
 # read tegrastats file, and calculate avg power.
 
