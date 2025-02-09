@@ -142,11 +142,11 @@ int tegrastats_get(tegrastats_info_t *info)
             {
                 last = "EMC_FREQ";
             }
-            else if (strcmp(token, "GR3D_FREQ"))
+            if (strcmp(token, "GR3D_FREQ"))
             {
                 last = "GR3D_FREQ";
             }
-            else if (strcmp(token, "VDD_SYS_GPU"))
+            if (strcmp(token, "VDD_SYS_GPU"))
             {
                 last = "VDD_SYS_GPU";
             }
