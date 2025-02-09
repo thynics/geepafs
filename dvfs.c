@@ -438,6 +438,7 @@ int main(int argc, char* argv[])
             // replace with tegrastats
             
             tegrastats_get(&teg_info);
+            printf("tegrastats read: %d %d %d %d", teg_info.current_freq, teg_info.current_power, teg_info.gpu_util, teg_info.mem_util);
             util.gpu = teg_info.gpu_util;
             util.memory = teg_info.mem_util;
             freq = teg_info.current_freq;
