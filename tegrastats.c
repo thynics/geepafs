@@ -213,6 +213,7 @@ int tegrastats_init() {
             perror("pthread_create failed");
             return 1;
         }
+        sleep(5000);
         // *shared_memory = 1;  // Initialize shared memory and set value to 1
     } else {
         printf("Shared memory already initialized. Skipping init.\n");
