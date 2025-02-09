@@ -140,14 +140,17 @@ int tegrastats_get(tegrastats_info_t *info)
         {
             if (strcmp(token, "EMC_FREQ"))
             {
+                print("Update EMC\n");
                 last = "EMC_FREQ";
             }
             if (strcmp(token, "GR3D_FREQ"))
             {
+                print("Update GR3D\n");
                 last = "GR3D_FREQ";
             }
             if (strcmp(token, "VDD_SYS_GPU"))
             {
+                print("Update VDD\n");
                 last = "VDD_SYS_GPU";
             }
         }
