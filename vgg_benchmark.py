@@ -32,8 +32,11 @@ def set_gpu_frequency(f):
         min_f_file.write(str(f) + "\n")
         max_f_file.write(str(f) + "\n")
 
-os.remove("vgg_geepafs_result.txt")
-os.remove("vgg_max_perf_result.txt")
+if os.path.exists("vgg_geepafs_result.txt"):
+    os.remove("vgg_geepafs_result.txt")
+
+if os.path.exists("vgg_max_perf_result.txt"):
+    os.remove("vgg_max_perf_result.txt")
 
 # start tegrastats first
 print("start tegrastats")

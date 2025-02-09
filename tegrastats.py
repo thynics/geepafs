@@ -20,6 +20,7 @@ def monitor_tegrastats(output_file):
                 proc.terminate()
 
 output_file_path = "tegrastats_output.txt"
-os.remove("tegrastats_all.txt")
+if os.path.exists("tegrastats_all.txt"):
+    os.remove("tegrastats_all.txt")
 print("start success")
 monitor_tegrastats(output_file_path)
