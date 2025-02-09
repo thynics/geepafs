@@ -47,6 +47,7 @@ void *bash_thread(void *arg) {
         pthread_exit(NULL);
     }
     int fd = fileno(fp);
+    fcntl(fd, F_SETFL, O_NONBLOCK);
 
     key_t key = ftok("tegrastats_content", 65);  // Generate unique key for shared memory
     if (key == -1) {
@@ -68,6 +69,18 @@ void *bash_thread(void *arg) {
         goto exit_thread;
     }
 
+    while (1)
+    {
+        ssize_t n = read(fd, buffer, sizeof(buffer) - 1);
+        if (n > 0) {
+            buffer[n] = '\0';
+            printf("%s", buffer);
+        } else if (n == 0) {
+            break;
+        }
+    }
+    
+    return
     tegrastats_info_t t_info;
     while (fgets(buffer, sizeof(buffer), fd) != NULL) {
         buffer[strcspn(buffer, "\n")] = 0;
