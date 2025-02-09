@@ -87,7 +87,7 @@ def time_window(start, end, line):
 # calculation
 with open("tegrastats_all.txt", "r") as tf:
     dvfs_lines = [extract(line.split("---")[1]) for line in tf if time_window(dvfs_vgg_start_time, dvfs_vgg_end_time, line)]
-    max_perf_lines = [extract(line.split("---")[1]) for line in tf if time_window(dvfs_vgg_start_time, dvfs_vgg_end_time, line)]
+    max_perf_lines = [extract(line.split("---")[1]) for line in tf if time_window(vgg_start_time, vgg_end_time, line)]
 
 
 print(dvfs_vgg_start_time, dvfs_vgg_end_time, vgg_start_time, vgg_end_time)
