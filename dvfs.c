@@ -422,7 +422,7 @@ int main(int argc, char* argv[])
 
     while (keepRunning) // press ctrl+c can break this loop.
     {
-        sleep(1000);
+        sleep(2);
         gettimeofday(&starttime, NULL);
         if (printUtil)
         {
