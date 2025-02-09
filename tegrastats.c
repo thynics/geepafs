@@ -39,7 +39,6 @@ unsigned int get_closest_frequency(unsigned int input) {
     }
 }
 void *bash_thread(void *arg) {
-    printf("here");
     char *command = (char *)arg;
     char buffer[BUFFER_SIZE];
     FILE *fp = popen(command, "r");
