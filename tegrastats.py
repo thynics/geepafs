@@ -18,7 +18,6 @@ def monitor_tegrastats(output_file):
             except KeyboardInterrupt:
                 proc.terminate()
 
-if __name__ == "__main__":
-    output_file_path = "tegrastats_output.txt"
-    print("start success")
-    monitor_tegrastats(output_file_path)
+output_file_path = "tegrastats_output.txt"
+print("start success")
+monitor_tegrastats(output_file_path)
