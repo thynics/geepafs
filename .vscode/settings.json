@@ -3,6 +3,7 @@
         "stdio.h": "c",
         "stdbool.h": "c",
         "cupti_target.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "pthread.h": "c"
     }
 }
