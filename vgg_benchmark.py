@@ -21,7 +21,6 @@ dvfs_thread = subprocess.Popen(["sudo ./dvfs mod Assure p90"], stdout=subprocess
 # warm-up run for about 30s
 warn_up_thread = subprocess.Popen(["sudo python3 ~/jetson_benchmarks/benchmark.py --jetson_clocks --jetson_devkit tx2 --model_name vgg19 --csv_file_path ~/jetson_benchmarks/benchmark_csv/tx2-nano-benchmarks.csv --model_dir ~/jetson_benchmarks"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
 print("warm up for 60s")
-warn_up_thread.wait()
 time.sleep(60)
 # kill vgg, and re-run
 print("warn up finished")
