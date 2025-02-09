@@ -84,10 +84,10 @@ int tegrastats_get(tegrastats_info_t *info)
     char *last = NULL;
     while (token != NULL)
     {
+        printf("LAST: %s\n", last);
+        printf("NOW: %s\n", token);
         if (last != NULL)
         {
-            printf("LAST: %s\n", last);
-            printf("NOW: %s\n", token);
             if (strcmp(token, "EMC_FREQ"))
             {
                 unsigned int mem_util = 0;
