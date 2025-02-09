@@ -30,7 +30,7 @@ time.sleep(60)
 print("warn up finished")
 warn_up_thread.terminate()
 
-time.sleep(30)
+time.sleep(60)
 
 # vgg -> vgg_geepafs_result.txt
 # read tegrastats file, and calculate avg power
@@ -42,6 +42,8 @@ vgg_thread.wait()
 dvfs_vgg_end_time = time.time()
 # kill geepafs
 dvfs_thread.terminate()
+
+time.sleep(60)
 
 # run vgg
 vgg_start_time = time.time()
