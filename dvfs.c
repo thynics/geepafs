@@ -231,71 +231,12 @@ void foldlineRegression(int xc, int num1, double* X1, double* Y1, int num2, doub
 
 void getAvailableFreqs(int* availableFreqs, int numAvailableFreqs) // get all available frequency values.
 {
-    // Run "nvidia-smi -q -d SUPPORTED_CLOCKS" to get available frequencies and update this function if needed.
-    if (strcmp(MACHINE, "v100-maxq") == 0)
-    {
-        int idx = 1;
-        int freq = 135;
-        bool seven = true;
-        availableFreqs[0] = freq;
-        while (freq <= 1440)
-        {
-            if (seven)
-            {
-                freq += 7;
-                seven = false;
-            }
-            else
-            {
-                freq += 8;
-                seven = true;
-            }
-            if (freq <= 1440)
-            {
-                availableFreqs[idx] = freq;
-                idx += 1;
-            }
-        }
-    }
-    else if (strcmp(MACHINE, "v100-300w") == 0)
-    {
-        int idx = 1;
-        int freq = 135;
-        bool seven = true;
-        availableFreqs[0] = freq;
-        while (freq <= 1530)
-        {
-            if (seven)
-            {
-                freq += 7;
-                seven = false;
-            }
-            else
-            {
-                freq += 8;
-                seven = true;
-            }
-            if (freq <= 1530)
-            {
-                availableFreqs[idx] = freq;
-                idx += 1;
-            }
-        }
-    }
-    else if (strcmp(MACHINE, "a100-insp") == 0)
-    {
-	    int idx = 1;
-	    int freq = 210;
-	    availableFreqs[0] = freq;
-	    while (freq <= 1410)
-	    {
-	        freq += 15;
-	        if (freq <= 1410)
-	        {
-		    availableFreqs[idx] = freq;
-		    idx += 1;
-	        }
-	    }
+    int available_frequencies[] = {
+        114750000, 216750000, 318750000, 420750000, 522750000, 624750000,
+        726750000, 854250000, 930750000, 1032750000, 1122000000, 1236750000, 1300500000
+    };
+    for (int i = 0; i < 14; i++) {
+        availableFreqs[i] = available_frequencies[i];
     }
 }
 
