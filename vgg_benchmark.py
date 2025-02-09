@@ -10,6 +10,28 @@ import subprocess
 import time
 import os
 
+
+dir = '/sys/devices/gpu.0/devfreq/17000000.gp10b'
+
+available_frequencies = [114750000, 216750000, 318750000, 
+                        420750000, 522750000, 624750000,
+                        726750000, 854250000, 930750000,
+                        1032750000, 1122000000, 1236750000,
+                        1300500000]
+
+min_frequency_path = dir + '/min_freq'
+max_frequency_path = dir + '/max_freq'
+
+process_tegrastats = None
+
+def set_gpu_frequency(f):
+    if f not in available_frequencies:
+        raise ValueError(f"Frequency {f} is not supported.")
+    
+    with open(min_frequency_path, "w") as min_f_file, open(max_frequency_path, "w") as max_f_file:
+        min_f_file.write(str(f) + "\n")
+        max_f_file.write(str(f) + "\n")
+
 os.remove("vgg_geepafs_result.txt")
 os.remove("vgg_max_perf_result.txt")
 
@@ -29,7 +51,7 @@ time.sleep(60)
 # kill vgg, and re-run
 print("warn up finished")
 warn_up_thread.terminate()
-
+set_gpu_frequency(1300500000)
 time.sleep(60)
 
 # vgg -> vgg_geepafs_result.txt
@@ -43,6 +65,7 @@ dvfs_vgg_end_time = time.time()
 # kill geepafs
 dvfs_thread.terminate()
 
+set_gpu_frequency(1300500000)
 time.sleep(60)
 
 # run vgg
