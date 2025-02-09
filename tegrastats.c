@@ -39,6 +39,7 @@ unsigned int get_closest_frequency(unsigned int input) {
     }
 }
 void *bash_thread(void *arg) {
+    printf("bash thread enter\n");
     char *command = (char *)arg;
     char buffer[BUFFER_SIZE];
     FILE *fp = popen(command, "r");
@@ -170,7 +171,6 @@ int tegrastats_init() {
             perror("pthread_create failed");
             return 1;
         }
-        printf("create thread success\n");
         // *shared_memory = 1;  // Initialize shared memory and set value to 1
     } else {
         printf("Shared memory already initialized. Skipping init.\n");
