@@ -41,7 +41,7 @@ unsigned int get_closest_frequency(unsigned int input) {
 void *bash_thread(void *arg) {
     char *command = (char *)arg;
     char buffer[BUFFER_SIZE];
-    FILE *fp = popen("ls", "r");
+    FILE *fp = command;
     if (fp == NULL) {
         perror("popen failed");
         pthread_exit(NULL);
