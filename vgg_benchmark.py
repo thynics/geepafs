@@ -10,6 +10,9 @@ import subprocess
 import time
 import os
 
+os.remove("vgg_geepafs_result.txt")
+os.remove("vgg_max_perf_result.txt")
+
 # start tegrastats first
 print("start tegrastats")
 tegrastats_thread = subprocess.Popen(["sudo python3 ~/geepafs/tegrastats.py"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
@@ -86,9 +89,12 @@ with open("tegrastats_all.txt", "r") as tf:
     dvfs_lines = [extract(line.split("---")[1]) for line in tf if time_window(dvfs_vgg_start_time, dvfs_vgg_end_time, line)]
     max_perf_lines = [extract(line.split("---")[1]) for line in tf if time_window(dvfs_vgg_start_time, dvfs_vgg_end_time, line)]
 
-with open(f'vgg_geepafs_result.txt', "r") as dvfs_f, open(f'vgg_max_perf_result.txt', "r") as max_perf_f:
-    dvfs_time = float([line for line in dvfs_f][10].split("---")[1][1:])
-    max_perf_time = float([line for line in dvfs_f][10].split("---")[1][1:])
+
+print(dvfs_vgg_start_time, dvfs_vgg_end_time, vgg_start_time, vgg_end_time)
+
+dvfs_time = (dvfs_vgg_end_time - dvfs_vgg_start_time)/1000
+max_perf_time = (vgg_end_time - vgg_start_time) / 1000
+
 
 dvfs_avg_power = sum(x[gpu_power_key] for x in dvfs_lines) / len(dvfs_lines)
 max_avg_power = sum(x[gpu_power_key] for x in max_perf_lines) / len(max_perf_lines)
