@@ -1,12 +1,3 @@
-ARCH       := $(shell getconf LONG_BIT)
-OS         := $(shell cat /etc/issue)
-
-ifneq (,$(wildcard /etc/redhat-release))
-    RHEL_OS := $(shell cat /etc/redhat-release)
-endif
-
-# Gets Driver Branch
-DRIVER_BRANCH := $(shell nvidia-smi | grep Driver | cut -f 3 -d' ' | cut -f 1 -d '.')
 
 # Location of the CUDA Toolkit
 CUDA_PATH := "/usr/local/cuda"
@@ -69,11 +60,11 @@ ifneq (${ARCH},$(filter ${ARCH},32 64))
 	$(error Unknown architecture!)
 endif
 
-NVML_LIB += /usr/local/cuda/lib/
+NVML_LIB += /usr/local/cuda/lib64/
 NVML_LIB_L := $(addprefix -L , $(NVML_LIB))
 
 CFLAGS  := -I /usr/local/include -I /usr/local/cuda/include
-LDFLAGS := -lnvidia-ml $(NVML_LIB_L) -lm
+LDFLAGS := $(NVML_LIB_L) -lm
 
 SOURCES := dvfs.c tegrastats.c
 OBJECTS := $(SOURCES:.c=.o)
