@@ -1,7 +1,7 @@
 import subprocess
 
 def monitor_tegrastats(output_file):
-    command = ["sudo", "tegrastats"]
+    command = ["sudo tegrastats"]
     with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True) as proc:
         try:
             for line in proc.stdout:
