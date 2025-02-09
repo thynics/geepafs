@@ -75,9 +75,19 @@ NVML_LIB_L := $(addprefix -L , $(NVML_LIB))
 CFLAGS  := -I /usr/local/include -I /usr/local/cuda/include
 LDFLAGS := -lnvidia-ml $(NVML_LIB_L) -lm
 
+SOURCES := dvfs.c tegrastats.c
+OBJECTS := $(SOURCES:.c=.o)
+
 all: dvfs
-dvfs: dvfs.o
-	$(CC) $< $(CFLAGS) $(LDFLAGS) -o $@
+
+# Compile dvfs by linking both object files
+dvfs: $(OBJECTS)
+	$(CC) $(OBJECTS) $(CFLAGS) $(LDFLAGS) -o dvfs
+
+# Generic rule to compile each source file into object files
+%.o: %.c
+	$(CC) -c $< $(CFLAGS) -o $@
+
 clean:
-	-@rm -f dvfs.o
-	-@rm -f dvfs 
+	-@rm -f $(OBJECTS)
+	-@rm -f dvfs

@@ -53,6 +53,75 @@ SOFTWARE.
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include "tegrastats.h"
+
+
+// Array of available GPU frequencies
+const unsigned int available_frequencies[] = {
+    114750000, 216750000, 318750000, 
+    420750000, 522750000, 624750000,
+    726750000, 854250000, 930750000,
+    1032750000, 1122000000, 1236750000,
+    1300500000
+};
+
+const int num_frequencies = sizeof(available_frequencies) / sizeof(available_frequencies[0]);
+
+const char *dir = "/sys/devices/gpu.0/devfreq/17000000.gp10b";
+char min_frequency_path[256];
+char max_frequency_path[256];
+
+// Function to check if the frequency is available
+int is_frequency_supported(unsigned int frequency) {
+    for (int i = 0; i < num_frequencies; i++) {
+        if (available_frequencies[i] == frequency) {
+            return 1;  // Frequency is supported
+        }
+    }
+    return 0;  // Frequency is not supported
+}
+
+// Function to write the frequency to a file
+int write_to_file(const char *path, unsigned int frequency) {
+    FILE *file = fopen(path, "w");
+    if (file == NULL) {
+        perror("Failed to open file");
+        return -1;
+    }
+    fprintf(file, "%u\n", frequency);
+    fclose(file);
+    return 0;
+}
+
+// Function to set the GPU frequency
+int set_gpu_frequency(unsigned int frequency) {
+    if (!is_frequency_supported(frequency)) {
+        fprintf(stderr, "Error: Frequency %u is not supported.\n", frequency);
+        return -1;
+    }
+
+    snprintf(min_frequency_path, sizeof(min_frequency_path), "%s/min_freq", dir);
+    snprintf(max_frequency_path, sizeof(max_frequency_path), "%s/max_freq", dir);
+
+    // Write to min_freq and max_freq files
+    if (write_to_file(min_frequency_path, frequency) != 0) {
+        return -1;
+    }
+    if (write_to_file(max_frequency_path, frequency) != 0) {
+        return -1;
+    }
+
+    printf("Successfully set GPU frequency to %u.\n", frequency);
+    return 0;
+}
+
+int reset_gpu() {
+    // reset: set frequency to max
+    // and set mem frequecy to max
+    set_gpu_frequency(1300500000);
+    // memory frequency will never change in this program
+    return 0;
+}
 
 static volatile int keepRunning = 1;
 
@@ -242,25 +311,7 @@ int main(int argc, char* argv[])
     int* const probFreqs = (int*)malloc(sizeof(int)*20);// reserve enough space for probing freqs.
 
     // Run "nvidia-smi -q -d SUPPORTED_CLOCKS" to get available frequencies and update the following parameters if needed.
-    if (strcmp(MACHINE, "v100-maxq") == 0)
-    {
-        minSetFreq = 855; freqAvgEff = 855; maxFreq = 1440; setMemFreq = 810; numAvailableFreqs = 175;
-        numProbFreq = 4;
-        probFreqs[0] = 855; // frequency values for probing.
-        probFreqs[1] = 1050;
-        probFreqs[2] = 1245;
-        probFreqs[3] = 1440;
-    }
-    else if (strcmp(MACHINE, "v100-300w") == 0)
-    {
-        minSetFreq = 952; freqAvgEff = 952; maxFreq = 1530; setMemFreq = 877; numAvailableFreqs = 187;
-        numProbFreq = 4;
-        probFreqs[0] = 952; // frequency values for probing.
-        probFreqs[1] = 1147;
-        probFreqs[2] = 1335;
-        probFreqs[3] = 1530;
-    }
-    else if (strcmp(MACHINE, "a100-insp") == 0)
+    if (strcmp(MACHINE, "a100-insp") == 0)
     {
         minSetFreq = 1110; freqAvgEff = 1110; maxFreq = 1410; setMemFreq = 1593; numAvailableFreqs = 81;
         numProbFreq = 4;
@@ -325,6 +376,8 @@ int main(int argc, char* argv[])
     // Initialize.
     printf("MACHINE %s\n", MACHINE);
     printf("GPU freqset tool start..\n");
+    tegrastats_init();
+
     if (argc < 2)
     {
         printf("Error: Needs argument: %s\n", allArg);
@@ -335,19 +388,7 @@ int main(int argc, char* argv[])
         printf("Error: Only the following arguments are allowed: %s\n", argAbbre);
         return 1;
     }
-    result = nvmlInit_v2();
-    if (NVML_SUCCESS != result)
-    { 
-        printf("Failed to initialize NVML: %s\n", nvmlErrorString(result));
-        return 1;
-    }
-    result = nvmlDeviceGetCount(&device_count);
-    if (NVML_SUCCESS != result)
-    { 
-        printf("Failed to query GPU count: %s\n", nvmlErrorString(result));
-        goto Error;
-    }
-
+    device_count = 1; // jetson only has 1 GPU
     // Initialize arrays.
     int* const optimizedFreqs = (int*)malloc(sizeof(int)*device_count);
     int** const gpuUtils = (int**)malloc(sizeof(int*)*device_count);// a 2-d array. Each row is for a certain gpu.
@@ -429,50 +470,19 @@ int main(int argc, char* argv[])
         printf("Warning: onlySetFreqForOne set as true.\n");
 
     // Reset GPU clocks.
+    // TODO Reset GPU
     printf("Reset GPU frequency for: ");
-    for (i = 0; i < device_count; i++)
-    {
-        result = nvmlDeviceGetHandleByIndex(i, &device);
-        if (NVML_SUCCESS != result)
-        { 
-            printf("Failed to get handle for GPU %u: %s\n", i, nvmlErrorString(result));
-            goto Error;
-        }
+    reset_gpu();
+    // 
 
-        result = nvmlDeviceResetGpuLockedClocks(device);
-        if (NVML_ERROR_NO_PERMISSION == result)
-        {
-            printf("\t\t Error: Need root privileges: %s\n", nvmlErrorString(result));
-            goto Error;
-        }
-        else if (NVML_ERROR_NOT_SUPPORTED == result)
-            printf("\t\t Operation not supported.\n");
-        else if (NVML_SUCCESS != result)
-        {
-            printf("\t\t Failed to reset locked frequency for GPU %u: %s\n", i, nvmlErrorString(result));
-            goto Error;
-        } 
-
-        result = nvmlDeviceResetApplicationsClocks(device);
-        if (NVML_ERROR_NO_PERMISSION == result)
-            printf("\t\t Need root privileges: %s\n", nvmlErrorString(result));
-        else if (NVML_ERROR_NOT_SUPPORTED == result)
-            printf("\t\t Operation not supported.\n");
-        else if (NVML_SUCCESS != result)
-        {
-            printf("\t\t Failed to reset application frequency for GPU %u: %s\n", i, nvmlErrorString(result));
-            goto Error;
-        } 
-        else if (NVML_SUCCESS == result)
-        {
-            printf("device %u. ", i);
-        }
-    }
     printf("\n");
 
     // main loop.
     signal(SIGINT, intHandler);
     printf("Main loop start..\n");
+
+    tegrastats_info_t teg_info;
+
     while (keepRunning) // press ctrl+c can break this loop.
     {
         gettimeofday(&starttime, NULL);
@@ -486,36 +496,14 @@ int main(int argc, char* argv[])
         // loop through each GPU.
         for (i = 0; i < device_count; i++)
         {
-            result = nvmlDeviceGetHandleByIndex(i, &device);
-            if (NVML_SUCCESS != result)
-            { 
-                printf("Failed to get handle for GPU %u: %s\n", i, nvmlErrorString(result));
-                goto Error;
-            }
-
             // get gpu utilization rate (including gmem bandwidth util).
-            result = nvmlDeviceGetUtilizationRates(device, &util);
-            if (NVML_SUCCESS != result)
-            { 
-                printf("Failed to get utilization rate for GPU %u: %s\n", i, nvmlErrorString(result));
-                goto Error;
-            }
-
-            // get gpu frequency.
-            result = nvmlDeviceGetClockInfo(device, 1, &freq);// 1 refers to SM domain.
-            if (NVML_SUCCESS != result)
-            { 
-                printf("Failed to get clock frequency for GPU %u: %s\n", i, nvmlErrorString(result));
-                goto Error;
-            }
-
-            // get gpu power usage.
-            result = nvmlDeviceGetPowerUsage(device, &power);
-            if (NVML_SUCCESS != result)
-            {
-                printf("Failed to get power usage for GPU %u: %s\n", i, nvmlErrorString(result));
-                goto Error;
-            }
+            // replace with tegrastats
+            
+            tegrastats_get(&teg_info);
+            util.gpu = teg_info.gpu_util;
+            util.memory = teg_info.mem_util;
+            freq = teg_info.current_freq;
+            power = teg_info.current_power;
 
             // set GPU frequency.
             // MaxFreq policy.
@@ -663,35 +651,18 @@ int main(int argc, char* argv[])
                 freqsetHappen = false;
                 if (onlySetAppFreq)
                 {
-                    if (onlySetFreqForOne)
-                    {
-                        if (onlySetGPUIdx == i)
-                            result = nvmlDeviceSetApplicationsClocks(device, setMemFreq, setFreq);
-                        else
-                            result = NVML_SUCCESS;
-                    }
-                    else
-                        result = nvmlDeviceSetApplicationsClocks(device, setMemFreq, setFreq);
+                    set_gpu_frequency(setFreq);
                     freqsetHappen = true;
                 }
                 else
                 {
-                    result = nvmlDeviceSetGpuLockedClocks(device, setFreq, setFreq);
+                    // result = nvmlDeviceSetGpuLockedClocks(device, setFreq, setFreq);
                     freqsetHappen = true;
                 }
 
                 if (freqsetHappen)
                 {
-                    if (NVML_ERROR_NO_PERMISSION == result)
-                        printf("\t\t Error: Need root privileges: %s\n", nvmlErrorString(result));
-                    else if (NVML_ERROR_NOT_SUPPORTED == result)
-                        printf("\t\t Operation not supported.\n");
-                    else if (NVML_SUCCESS != result)
-                    {
-                        printf("\t\t Failed to set frequency for GPU %u: %s\n", i, nvmlErrorString(result));
-                        goto Error;
-                    } 
-                    else if (NVML_SUCCESS == result && printUtil)
+                    if (printUtil)
                     {
                         printf("%u, %u, %u, %u, %u, ", util.gpu, util.memory, power, freq, setFreq);
                     }
@@ -1165,44 +1136,7 @@ int main(int argc, char* argv[])
     }// end of main while loop.
 
     // Reset GPU clocks before terminate.
-    printf("Reset GPU frequency for: ");
-    for (i = 0; i < device_count; i++)
-    {
-        result = nvmlDeviceGetHandleByIndex(i, &device);
-        if (NVML_SUCCESS != result)
-        { 
-            printf("Failed to get handle for GPU %u: %s\n", i, nvmlErrorString(result));
-            goto Error;
-        }
-
-        result = nvmlDeviceResetGpuLockedClocks(device);
-        if (NVML_ERROR_NO_PERMISSION == result)
-            printf("\t\t Need root privileges: %s\n", nvmlErrorString(result));
-        else if (NVML_ERROR_NOT_SUPPORTED == result)
-            printf("\t\t Operation not supported.\n");
-        else if (NVML_SUCCESS != result)
-        {
-            printf("\t\t Failed to reset locked frequency for GPU %u: %s\n", i, nvmlErrorString(result));
-            goto Error;
-        } 
-
-        result = nvmlDeviceResetApplicationsClocks(device);
-        if (NVML_ERROR_NO_PERMISSION == result)
-            printf("\t\t Need root privileges: %s\n", nvmlErrorString(result));
-        else if (NVML_ERROR_NOT_SUPPORTED == result)
-            printf("\t\t Operation not supported.\n");
-        else if (NVML_SUCCESS != result)
-        {
-            printf("\t\t Failed to reset application frequency for GPU %u: %s\n", i, nvmlErrorString(result));
-            goto Error;
-        } 
-        else if (NVML_SUCCESS == result)
-        {
-            printf("device %u. ", i);
-        }
-    }
-    printf("\n");
-
+    reset_gpu();
     // Terminate.
     free(probFreqs);
     free(optimizedFreqs);
@@ -1229,16 +1163,10 @@ int main(int argc, char* argv[])
     free(freqCap);
     free(x); free(x1); free(x2); free(x3);
     free(y); free(y1); free(y2); free(y3);
-    result = nvmlShutdown();
-    if (NVML_SUCCESS != result)
-        printf("Failed to shutdown NVML: %s\n", nvmlErrorString(result));
     printf("GPU freqset tool terminated.\n");
     return 0;
 
 Error:
-    result = nvmlShutdown();
-    if (NVML_SUCCESS != result)
-        printf("Failed to shutdown NVML: %s\n", nvmlErrorString(result));
     return 1;
 }
 // End of file dvfs.c
