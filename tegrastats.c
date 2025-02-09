@@ -204,6 +204,7 @@ int tegrastats_get(tegrastats_info_t *info) {
     }
 
     memcpy(info, shared_memory, sizeof(tegrastats_info_t));
+    printf("Read tegrastats info: %d %d %d \n", info->current_freq, info->current_power, info->gpu_util);
     return 0;
 }
 void tegrastats_terminate() {
