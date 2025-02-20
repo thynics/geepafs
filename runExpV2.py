@@ -18,7 +18,7 @@ async def tegrastats_record():
     )
     print("create tegrastats success")
 
-    with open("./tegrastats_records.txt", "a") as tf, open("tegrastats_output.txt", "w") as lf:
+    with open("./tegrastats_records_geepafs.txt", "a") as tf, open("tegrastats_output.txt", "w") as lf:
         while True:
             line = await tegrastats_command_thread.stdout.readline()
             if not line:
@@ -94,14 +94,8 @@ async def main():
 
     tegrastats_task = asyncio.create_task(tegrastats_record())
 
-    print(f"{time.time()}: run max frequency...")
-    benchmarks_task = asyncio.create_task(run_benchmarks("max_frequency"))
-    await benchmarks_task
-
     await asyncio.sleep(20)
     print(f"{time.time()}: run geepafs ...")
-
-    
     geepafs = asyncio.create_task(run_geepafs())
     benchmarks_task = asyncio.create_task(run_benchmarks("geepafs"))
     await benchmarks_task
