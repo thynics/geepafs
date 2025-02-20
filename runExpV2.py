@@ -94,9 +94,9 @@ async def main():
 
     tegrastats_task = asyncio.create_task(tegrastats_record())
 
-    print(f"{time.time()}: run max frequency...")
-    benchmarks_task = asyncio.create_task(run_benchmarks("max_frequency"))
-    await benchmarks_task
+    #print(f"{time.time()}: run max frequency...")
+    #benchmarks_task = asyncio.create_task(run_benchmarks("max_frequency"))
+    #await benchmarks_task
 
     await asyncio.sleep(20)
     print(f"{time.time()}: run geepafs ...")
