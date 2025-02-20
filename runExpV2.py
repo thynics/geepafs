@@ -109,3 +109,4 @@ async def main():
     geepafs.cancel()
     tegrastats_task.cancel()
 
+asyncio.run(main())
