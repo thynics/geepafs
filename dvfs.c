@@ -92,7 +92,7 @@ int write_to_file(const char *path, unsigned int frequency) {
     fclose(file);
     return 0;
 }
-unsigned int current_freq
+unsigned int current_freq;
 // Function to set the GPU frequency
 int set_gpu_frequency(unsigned int frequency) {
     if (!is_frequency_supported(frequency)) {
