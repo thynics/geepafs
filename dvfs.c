@@ -284,7 +284,7 @@ int main(int argc, char* argv[])
         if (strcmp(argv[3], "p85") == 0)
             perfThres = 0.85;
     }
-    perfThres = 0.98;
+    perfThres = 0.90;
     const bool useFreqCap = true;// whether set an upper bound.
     const bool useRegression = true;
     const int loopDelay = 200;// minimal interval of each loop in milliseconds. Used in multiple policies.
