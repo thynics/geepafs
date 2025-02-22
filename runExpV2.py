@@ -88,19 +88,11 @@ def block_run_benchmarks(tag:str):
 
 async def main():
     set_memory_frequency(1866000000)
-    await asyncio.sleep(20)
-
     set_gpu_frequency(1300500000)
-    await asyncio.sleep(20)
-
-    tegrastats_task = asyncio.create_task(tegrastats_record())
-
-    await asyncio.sleep(20)
+    await asyncio.sleep(10)
     print(f"{time.time()}: run geepafs ...")
     geepafs = asyncio.create_task(run_geepafs())
     block_run_benchmarks("")
-
     geepafs.cancel()
-    tegrastats_task.cancel()
 
 asyncio.run(main())
