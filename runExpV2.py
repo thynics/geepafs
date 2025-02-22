@@ -5,6 +5,7 @@ import random
 import asyncio
 
 
+
 async def run_geepafs():
     dvfscmd = f'sudo ./dvfs mod Assure p95 > output/dvfs_{time.time()}.txt'
     os.system(dvfscmd)
