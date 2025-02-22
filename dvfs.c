@@ -92,7 +92,7 @@ int write_to_file(const char *path, unsigned int frequency) {
     fclose(file);
     return 0;
 }
-
+unsigned int current_freq
 // Function to set the GPU frequency
 int set_gpu_frequency(unsigned int frequency) {
     if (!is_frequency_supported(frequency)) {
@@ -103,13 +103,24 @@ int set_gpu_frequency(unsigned int frequency) {
     snprintf(min_frequency_path, sizeof(min_frequency_path), "%s/min_freq", dir);
     snprintf(max_frequency_path, sizeof(max_frequency_path), "%s/max_freq", dir);
 
-    // Write to min_freq and max_freq files
-    if (write_to_file(min_frequency_path, frequency) != 0) {
-        return -1;
+    if (frequency >= current_freq) {
+        if (write_to_file(max_frequency_path, frequency) != 0) {
+            return -1;
+        }
+        // Write to min_freq and max_freq files
+        if (write_to_file(min_frequency_path, frequency) != 0) {
+            return -1;
+        }
+    } else {
+        // Write to min_freq and max_freq files
+        if (write_to_file(min_frequency_path, frequency) != 0) {
+            return -1;
+        }
+        if (write_to_file(max_frequency_path, frequency) != 0) {
+            return -1;
+        }
     }
-    if (write_to_file(max_frequency_path, frequency) != 0) {
-        return -1;
-    }
+    current_freq = frequency;
 
     printf("Successfully set GPU frequency to %u.\n", frequency);
     return 0;
