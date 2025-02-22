@@ -84,7 +84,7 @@ async def run_benchmarks(tag:str):
 
 def block_run_benchmarks(tag:str):
     for bm in benchmarks:
-        os.system(get_benchmark_command(bm))
+        os.system(f"{get_benchmark_command(bm)} > {bm}_{tag}_output.txt")
 
 async def main():
     set_memory_frequency(1866000000)
