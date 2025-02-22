@@ -86,13 +86,4 @@ def block_run_benchmarks(tag:str):
     for bm in benchmarks:
         os.system(f"{get_benchmark_command(bm)} > {bm}_{tag}_output.txt")
 
-async def main():
-    set_memory_frequency(1866000000)
-    set_gpu_frequency(1300500000)
-    await asyncio.sleep(10)
-    print(f"{time.time()}: run geepafs ...")
-    geepafs = asyncio.create_task(run_geepafs())
-    block_run_benchmarks("")
-    geepafs.cancel()
-
-asyncio.run(main())
+block_run_benchmarks("geep")
