@@ -4,7 +4,7 @@ import os
 
 def monitor_tegrastats(output_file):
     command = ["sudo tegrastats"]
-    with open(output_file, "w") as file, open("tegrastats_all.txt", "w") as all_f:
+    with open(output_file, "w") as file, open("tegrastats_all_22.txt", "w") as all_f:
         with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True) as proc:
             try:
                 for line in proc.stdout:

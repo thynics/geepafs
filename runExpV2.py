@@ -18,7 +18,7 @@ async def tegrastats_record():
     )
     print("create tegrastats success")
 
-    with open("./tegrastats_records_geepafs.txt", "a") as tf, open("tegrastats_output.txt", "w") as lf:
+    with open("./tegrastats_records_geepafs.txt", "w") as tf, open("tegrastats_output.txt", "w") as lf:
         while True:
             line = await tegrastats_command_thread.stdout.readline()
             if not line:
