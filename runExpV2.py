@@ -29,7 +29,7 @@ async def tegrastats_record():
             lf.write(decoded_line.strip())
             lf.flush()
             tf.write(str(time.time()) +"---"+ decoded_line.strip() + "\n")
-            tf.flush
+            tf.flush()
 
 
 benchmarks = ["inception_v4", "vgg19", "tiny-yolov3", "resnet"]
